@@ -1,0 +1,94 @@
+{%- comment -%} Motor Re Cycle — contact: WhatsApp community, direct WhatsApp/email to the admin, and the store contact form. {%- endcomment -%}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800&display=swap">
+{%- assign s = section.settings -%}
+{%- assign wa = s.wa_number | remove: '+' | remove: ' ' | remove: '-' -%}
+
+<section class="mrc-contact">
+  <p class="mrc-contact__eyebrow">Get in touch</p>
+  <h1 class="mrc-contact__title">{{ s.title }}</h1>
+  <div class="mrc-contact__grid">
+    <div class="mrc-contact__col">
+      {%- if s.group_link != blank -%}
+        <div class="mrc-panel mrc-panel--wa">
+          <span class="mrc-tag">WhatsApp community</span>
+          <h2 class="mrc-contact__big">{{ s.group_heading }}</h2>
+          <p>{{ s.group_text }}</p>
+          <a class="mrc-btn mrc-btn--wa" href="{{ s.group_link }}" target="_blank" rel="noopener">Join the WhatsApp group</a>
+        </div>
+      {%- endif -%}
+      <div class="mrc-panel">
+        <h2>Talk to us directly</h2>
+        <div class="mrc-contact__direct">
+          {%- if wa != blank -%}<a class="mrc-direct mrc-btn--wa" href="https://wa.me/{{ wa }}" target="_blank" rel="noopener"><b>WhatsApp the admin</b><small>{{ s.wa_number }}</small></a>{%- endif -%}
+          {%- if s.email != blank -%}<a class="mrc-direct mrc-direct--line" href="mailto:{{ s.email }}"><b>Email us</b><small>{{ s.email }}</small></a>{%- endif -%}
+        </div>
+        <p class="mrc-muted">Send your bike model and the part you need — we'll reply on WhatsApp or by email.</p>
+      </div>
+    </div>
+
+    {%- if s.show_form -%}
+      <div class="mrc-panel mrc-panel--form">
+        {%- form 'contact', id: 'MrcContactForm' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="mrc-contact__ok" role="status">Thanks for contacting us. We'll get back to you as soon as possible.</p>
+          {%- else -%}
+            <h2>Or send a message</h2>
+            {{ form.errors | default_errors }}
+            <label>Name<input type="text" name="contact[name]" autocomplete="name" value="{{ form.name }}"></label>
+            <label>Email (required)<input type="email" name="contact[email]" autocomplete="email" required value="{{ form.email }}"></label>
+            <label>Phone number<input type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}"></label>
+            <label>Comment<textarea name="contact[body]" rows="5">{{ form.body }}</textarea></label>
+            <button type="submit" class="mrc-btn mrc-btn--ember">Send</button>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .mrc-contact { background: #0b0b0c; color: #fff; padding: 64px 4% 96px; }
+  .mrc-contact__eyebrow { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .32em; text-transform: uppercase; color: #d4d4d4; }
+  .mrc-contact__title, .mrc-contact__big { margin: 0; font: italic 800 clamp(56px, 7vw, 88px)/.88 'Barlow Condensed', sans-serif; text-transform: uppercase; color: #fff; }
+  .mrc-contact__big { font-size: clamp(40px, 4vw, 52px); }
+  .mrc-contact__grid { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 24px; }
+  .mrc-contact__col { flex: 1 1 460px; display: flex; flex-direction: column; gap: 24px; }
+  .mrc-panel { box-sizing: border-box; padding: 36px; border-radius: 6px; background: #18181b; border: 1px solid #2a2a2f; display: flex; flex-direction: column; gap: 16px; }
+  .mrc-panel h2 { margin: 0; font-size: 22px; font-weight: 800; color: #fff; }
+  .mrc-panel p { margin: 0; font-size: 17px; line-height: 1.55; color: #d4d4d4; }
+  .mrc-panel--wa { border-top: 4px solid #25d366; }
+  .mrc-panel--wa .mrc-btn { align-self: flex-start; }
+  .mrc-panel--form { flex: 1 1 420px; background: #000; }
+  .mrc-panel--form form { display: flex; flex-direction: column; gap: 16px; }
+  .mrc-tag { align-self: flex-start; padding: 4px 10px; border-radius: 3px; background: rgba(37,211,102,.14); color: #4be08a; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .mrc-contact__direct { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .mrc-direct { display: flex; flex-direction: column; gap: 2px; padding: 16px 18px; border-radius: 4px; text-decoration: none; color: #0b0b0c; }
+  .mrc-direct b { font-size: 16px; } .mrc-direct small { font-size: 13px; font-weight: 600; }
+  .mrc-direct--line { border: 1px solid #fff; color: #fff; }
+  .mrc-direct:hover { filter: brightness(1.1); }
+  .mrc-muted { font-size: 14px !important; color: #a3a3a3 !important; }
+  .mrc-contact label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: #d4d4d4; }
+  .mrc-contact input, .mrc-contact textarea { padding: 14px 16px; border: 1px solid #5a5a60; border-radius: 4px; background: #161618; color: #fff; font: inherit; font-size: 16px; }
+  .mrc-contact input:focus, .mrc-contact textarea:focus { outline: 2px solid #e2582b; border-color: #e2582b; }
+  .mrc-contact button { justify-content: center; border: 0; cursor: pointer; }
+  .mrc-contact__ok { font-size: 20px !important; font-weight: 800; color: #fff !important; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "MRC contact",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Contact" },
+    { "type": "header", "content": "WhatsApp community" },
+    { "type": "url", "id": "group_link", "label": "Group invite link", "info": "https://chat.whatsapp.com/… (card hides if empty)" },
+    { "type": "text", "id": "group_heading", "label": "Card heading", "default": "Ride with India's Triumph riders" },
+    { "type": "textarea", "id": "group_text", "label": "Card text", "default": "Join our WhatsApp group for Triumph owners across India — swap tips, ask about fitment and be first to see new parts." },
+    { "type": "header", "content": "Direct contact" },
+    { "type": "text", "id": "wa_number", "label": "Admin WhatsApp number", "info": "With country code, e.g. +91 98xxxxxxxx" },
+    { "type": "text", "id": "email", "label": "Email address" },
+    { "type": "checkbox", "id": "show_form", "label": "Show contact form", "default": true }
+  ],
+  "presets": [ { "name": "MRC contact" } ]
+}
+{% endschema %}

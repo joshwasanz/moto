@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motor Re Cycle — Triumph parts specialist</title>
+<meta name="description" content="New, open-box and used parts for the Triumph 400 range, plus custom-painted fuel tanks.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800&family=Inter:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/app.js"></script>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <div class="text">
+      <p class="eyebrow">Specialist in Triumph motorcycles</p>
+      <h1 class="display">Parts.<br>Paint.<br><span>Passion.</span></h1>
+      <p class="lead">Everything your Triumph 400 needs, in one place.</p>
+      <ul class="ticks"><li>New &amp; open-box parts</li><li>Used &amp; refurbished parts</li><li>Custom-painted fuel tanks</li></ul>
+      <div class="btns"><a class="btn white" href="catalog.html">Shop all</a><a class="btn grey" href="contact.html">Contact us</a></div>
+    </div>
+    <div class="media"><img src="showroom.webp" alt="Motorcycle showroom under a brick-arched ceiling"></div>
+  </section>
+
+  <div id="rows"><p class="loading">Loading parts…</p></div>
+
+  <section class="page" style="padding-top:56px">
+    <p class="eyebrow">Get in touch</p>
+    <h2 class="display page-title">Contact</h2>
+    <div class="contact-grid" id="contact"></div>
+  </section>
+</main>
+<script>
+layout('Home');
+$('#contact').innerHTML = contactPanels();
+loadProducts().then(list => {
+  $('#rows').innerHTML = row('Latest products', list.slice(0, 10), 'catalog.html', 'View all') +
+    CATS.map(([name]) => row(name, list.filter(p => p.cat === name), 'catalog.html?cat=' + encodeURIComponent(name))).join('');
+}).catch(() => loadError($('#rows')));
+</script>
+</body>
+</html>

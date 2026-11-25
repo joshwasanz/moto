@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Motor Re Cycle</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800&family=Inter:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/app.js"></script>
+</head>
+<body>
+<main class="page">
+  <p class="eyebrow">Get in touch</p>
+  <h1 class="display page-title">Contact</h1>
+  <div class="contact-grid">
+    <div id="panels" class="col"></div>
+    <form class="panel form" id="msg">
+      <h3>Or send a message</h3>
+      <label class="stack">Name<input class="field" name="name" autocomplete="name" required></label>
+      <label class="stack">Phone number<input class="field" name="phone" type="tel" autocomplete="tel"></label>
+      <label class="stack">Your bike<input class="field" name="bike" placeholder="e.g. Speed 400, 2025"></label>
+      <label class="stack">Message<textarea class="field" name="body" rows="5" required placeholder="Which part are you looking for?"></textarea></label>
+      <div class="send">
+        <button class="btn wa" value="wa">Send on WhatsApp</button>
+        <button class="btn outline" value="mail">Send by email</button>
+      </div>
+      <p class="muted" style="margin:0;font-size:13px">Opens WhatsApp or your email app with your message ready to send.</p>
+    </form>
+  </div>
+</main>
+<script>
+layout('Contact');
+$('#panels').outerHTML = contactPanels();
+$('#msg').onsubmit = e => {
+  e.preventDefault();
+  const f = new FormData(e.target), via = e.submitter?.value;
+  const text = `Hi Motor Re Cycle,\n\n${f.get('body')}\n\nName: ${f.get('name')}${f.get('bike') ? '\nBike: ' + f.get('bike') : ''}${f.get('phone') ? '\nPhone: ' + f.get('phone') : ''}`;
+  if (via === 'wa' && waNumber) open('https://wa.me/' + waNumber + '?text=' + encodeURIComponent(text), '_blank');
+  else if (via === 'mail' && CONFIG.email) location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Parts enquiry') + '&body=' + encodeURIComponent(text);
+  else toast('Contact details are being set up — please try again soon.');
+};
+</script>
+</body>
+</html>

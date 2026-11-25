@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catalog — Motor Re Cycle</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800&family=Inter:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/app.js"></script>
+</head>
+<body>
+<main class="page">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> › Catalog</nav>
+  <h1 class="display page-title">Products</h1>
+
+  <div class="toolbar">
+    <div class="cats" id="cats" role="group" aria-label="Part type" style="width:100%"></div>
+    <div class="group" role="group" aria-label="Availability"><span class="label">Availability</span>
+      <button class="pill" id="inStock" aria-pressed="false">In stock</button>
+      <button class="pill" id="outStock" aria-pressed="false">Sold out</button></div>
+    <div class="group"><span class="label">Price ₹</span>
+      <input class="field" id="min" type="number" min="0" placeholder="0" aria-label="Minimum price">
+      <span class="muted">to</span>
+      <input class="field" id="max" type="number" min="0" placeholder="Max" aria-label="Maximum price"></div>
+    <button class="link-btn" id="clear">Clear all</button>
+    <div class="group" style="margin-left:auto"><label class="label" for="sort">Sort by</label>
+      <select class="field" id="sort">
+        <option value="featured">Featured</option>
+        <option value="az">Alphabetically, A–Z</option>
+        <option value="za">Alphabetically, Z–A</option>
+        <option value="plh">Price, low to high</option>
+        <option value="phl">Price, high to low</option>
+        <option value="new">Date, new to old</option>
+        <option value="old">Date, old to new</option>
+      </select></div>
+  </div>
+
+  <p class="muted" id="status" role="status" style="margin:0 0 20px">Loading parts…</p>
+  <div class="grid-cards" id="grid"></div>
+</main>
+<script>
+layout('Catalog');
+const S = { cat: param('cat') || 'All', q: (param('q') || '').toLowerCase(), in: false, out: false, min: '', max: '', sort: 'featured' };
+let ALL = [];
+const SORT = { az: (a, b) => a.title.localeCompare(b.title), za: (a, b) => b.title.localeCompare(a.title), plh: (a, b) => a.price - b.price,
+  phl: (a, b) => b.price - a.price, new: (a, b) => a.order - b.order, old: (a, b) => b.order - a.order };
+
+function render() {
+  $('#cats').innerHTML = ['All', ...CATS.map(c => c[0])].map(c => `<button class="pill" aria-pressed="${c === S.cat}" data-cat="${esc(c)}">${esc(c)}</button>`).join('');
+  $('#inStock').setAttribute('aria-pressed', S.in); $('#outStock').setAttribute('aria-pressed', S.out);
+  let list = ALL.filter(p => (S.cat === 'All' || p.cat === S.cat)
+    && (!S.q || (p.title + ' ' + p.desc).toLowerCase().includes(S.q))
+    && (S.in === S.out || (S.in ? !p.soldOut : p.soldOut))
+    && (S.min === '' || p.price >= +S.min) && (S.max === '' || p.price <= +S.max));
+  if (SORT[S.sort]) list = [...list].sort(SORT[S.sort]);
+  $('#status').textContent = `${list.length} item${list.length === 1 ? '' : 's'}${S.q ? ` for “${S.q}”` : ''}`;
+  $('#grid').innerHTML = list.length ? list.map(card).join('')
+    : '<div class="empty" style="grid-column:1/-1"><p style="font-weight:800;font-size:20px;margin:0 0 14px">No parts match these filters.</p><button class="btn white" onclick="clearAll()">Clear all</button></div>';
+}
+function clearAll() { Object.assign(S, { cat: 'All', q: '', in: false, out: false, min: '', max: '' }); $('#min').value = $('#max').value = ''; render(); }
+
+$('#cats').onclick = e => { const b = e.target.closest('[data-cat]'); if (b) { S.cat = b.dataset.cat; render(); } };
+$('#inStock').onclick = () => { S.in = !S.in; render(); };
+$('#outStock').onclick = () => { S.out = !S.out; render(); };
+$('#min').oninput = e => { S.min = e.target.value; render(); };
+$('#max').oninput = e => { S.max = e.target.value; render(); };
+$('#sort').onchange = e => { S.sort = e.target.value; render(); };
+$('#clear').onclick = clearAll;
+
+loadProducts().then(list => { ALL = list; render(); }).catch(() => { $('#status').textContent = ''; loadError($('#grid')); });
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{%- comment -%} Motor Re Cycle — sideways-scrolling product row from a collection, cards grow on hover. Add one per part type. {%- endcomment -%}
+{%- assign c = section.settings.collection -%}
+<section class="mrc-row">
+  <div class="mrc-row__head">
+    <h2>{{ section.settings.title | default: c.title }}</h2>
+    {%- if c != blank -%}<a href="{{ c.url }}">{{ section.settings.link_text }} ›</a>{%- endif -%}
+  </div>
+  <div class="mrc-row__track">
+    {%- for product in c.products limit: section.settings.limit -%}
+      <a class="mrc-card{% unless product.available %} is-sold{% endunless %}" href="{{ product.url }}">
+        <div class="mrc-card__frame">
+          {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.title, widths: '300, 600' }}{%- endif -%}
+          {%- unless product.available -%}<span class="mrc-card__badge">Sold out</span>{%- endunless -%}
+          <div class="mrc-card__info">
+            <span><b>{{ product.price | money }}</b><br><small>{% if product.available %}In stock{% else %}Sold out{% endif %}</small></span>
+            <span class="mrc-card__view">View</span>
+          </div>
+        </div>
+        <span class="mrc-card__title">{{ product.title }}</span>
+        <span class="mrc-card__price">{{ product.price | money }}</span>
+      </a>
+    {%- else -%}
+      <p class="mrc-row__empty">Pick a collection for this row in the theme editor.</p>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .mrc-row { background: #0b0b0c; color: #fff; padding: 8px 0; }
+  .mrc-row__head { padding: 0 4%; display: flex; align-items: baseline; gap: 14px; }
+  .mrc-row__head h2 { margin: 0; font-size: 22px; font-weight: 700; color: #e5e5e5; }
+  .mrc-row__head a { font-size: 14px; font-weight: 700; color: #e2582b; text-decoration: none; }
+  .mrc-row__track { display: flex; gap: 10px; overflow-x: auto; padding: 22px 4% 30px; scrollbar-width: none; scroll-snap-type: x proximity; }
+  .mrc-row__track::-webkit-scrollbar { display: none; }
+  .mrc-row__empty { color: #a3a3a3; }
+  .mrc-card { flex: none; width: 270px; display: flex; flex-direction: column; gap: 6px; color: #fff; text-decoration: none; scroll-snap-align: start; outline: none; }
+  .mrc-card__frame { position: relative; aspect-ratio: 4/3; border-radius: 6px; overflow: hidden; background: #18181b; transition: transform .28s, box-shadow .28s; }
+  .mrc-card__frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .mrc-card.is-sold img { opacity: .45; filter: grayscale(.8); }
+  .mrc-card__badge { position: absolute; top: 10px; left: 10px; padding: 4px 8px; border-radius: 3px; background: #0b0b0c; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .mrc-card__info { position: absolute; inset: auto 0 0; padding: 36px 12px 12px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(transparent, rgba(0,0,0,.92) 55%); opacity: 0; transition: opacity .2s; }
+  .mrc-card__info small { color: #f47a52; font-weight: 700; }
+  .mrc-card.is-sold .mrc-card__info small { color: #a3a3a3; }
+  .mrc-card__view { padding: 7px 14px; border-radius: 16px; background: #fff; color: #0b0b0c; font-size: 13px; font-weight: 800; }
+  .mrc-card:hover .mrc-card__frame, .mrc-card:focus-visible .mrc-card__frame { transform: scale(1.08); box-shadow: 0 14px 34px rgba(0,0,0,.7); z-index: 2; }
+  .mrc-card:focus-visible .mrc-card__frame { outline: 2px solid #e2582b; outline-offset: 2px; }
+  .mrc-card:hover .mrc-card__info, .mrc-card:focus-visible .mrc-card__info { opacity: 1; }
+  .mrc-card__title { margin-top: 4px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #e5e5e5; }
+  .mrc-card__price { font-size: 13px; color: #a3a3a3; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "MRC product row",
+  "tag": "div",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "text", "id": "title", "label": "Row title (blank = collection name)" },
+    { "type": "text", "id": "link_text", "label": "Link text", "default": "Explore all" },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 4, "max": 20, "step": 1, "default": 12 }
+  ],
+  "presets": [ { "name": "MRC product row" } ]
+}
+{% endschema %}
