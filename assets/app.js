@@ -110,10 +110,12 @@ function layout(active) {
   document.body.insertAdjacentHTML('beforeend', `<footer>
 <h2 style="margin:0;color:#fff;font-size:32px">Join our email list</h2>
 <p style="margin:8px 0 0;font-size:18px;color:var(--soft)">Get exclusive deals and early access to new products.</p>
-<form method="post" action="${CONFIG.store}/contact#newsletter"><input type="hidden" name="form_type" value="customer"><input type="hidden" name="contact[tags]" value="newsletter">
-<label class="sr" for="em">Email</label><input id="em" name="contact[email]" type="email" required placeholder="Email address"><button class="btn ember">Subscribe ›</button></form>
-<div class="links"><a href="index.html">Home</a><a href="catalog.html">Catalog</a><a href="contact.html">Contact</a><a href="${CONFIG.store}/policies/terms-of-service">Terms and Policies</a></div>
-<p style="margin-top:28px;font-size:13px"><span class="logo" style="font-size:22px">MOTOR<span>RECYCLE</span></span><br>© ${new Date().getFullYear()} MOTOR RE CYCLE, Powered by Shopify</p></footer>`);
+<p style="margin:16px 0 32px"><a class="btn ember" href="${CONFIG.store}" target="_blank" rel="noopener">Sign up on our Shopify store ›</a></p>
+<div class="links"><a href="index.html">Home</a><a href="catalog.html">Catalog</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a><a href="${CONFIG.store}/policies/terms-of-service">Terms and Policies</a></div>
+<p style="margin:28px auto 0;max-width:720px;font-size:13px"><span class="logo" style="font-size:22px">MOTOR<span>RECYCLE</span></span><br>
+Independent motorcycle parts specialist. Not affiliated with, or endorsed by, Triumph Motorcycles Ltd, Royal Enfield or Bajaj Auto — brand and model names are used only to describe which bikes our parts fit.<br>
+Orders are placed and paid on our official store, <a href="${CONFIG.store}" style="color:var(--soft)">${CONFIG.store.replace('https://', '')}</a>.<br>
+© ${new Date().getFullYear()} MOTOR RE CYCLE, Powered by Shopify</p></footer>`);
   const s = $('#search');
   $('#searchBtn').onclick = () => { s.classList.toggle('open'); s.q.focus(); };
   if (param('q')) s.q.value = param('q');

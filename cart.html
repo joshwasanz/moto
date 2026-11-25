@@ -36,7 +36,7 @@ function draw() {
   <div class="row-sum"><span style="font-weight:700;color:var(--soft)">Estimated total</span><span style="font-size:30px;font-weight:800">${money(total)}</span></div>
   <p class="muted" style="margin:0;font-size:13px">Taxes, discounts and shipping calculated at checkout.</p>
   <a class="btn ember" href="${Cart.checkoutUrl(items)}">Check out</a>
-  <p class="muted" style="margin:0;font-size:12px;text-align:center">Secure checkout on our Shopify store.</p>
+  <p class="muted" style="margin:0;font-size:13px;text-align:center">You'll finish checkout on our official Shopify store,<br><b style="color:var(--soft)">${CONFIG.store.replace('https://', '')}</b>. We never ask for card details on this site.</p>
 </aside></div>`;
 }
 $('#cart').onclick = e => {
